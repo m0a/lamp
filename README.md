@@ -1,62 +1,36 @@
-tutum-docker-lamp
+ubuntu16.04 lamp環境
 =================
 
-[![Deploy to Tutum](https://s.tutum.co/deploy-to-tutum.svg)](https://dashboard.tutum.co/stack/deploy/)
-
-Out-of-the-box LAMP image (PHP+MySQL)
+ベースとしたDockefileはこちらにあります。
 
 
-Usage
+使い方
 -----
 
-To create the image `tutum/lamp`, execute the following command on the tutum-docker-lamp folder:
+イメージの作成:
 
-	docker build -t tutum/lamp .
-
-You can now push your new image to the registry:
-
-	docker push tutum/lamp
+	docker build -t ubuntu-lamp .
 
 
-Running your LAMP docker image
+LAMP docker image の実行
 ------------------------------
 
-Start your image binding the external ports 80 and 3306 in all interfaces to your container:
+コンテナの起動:
 
-	docker run -d -p 80:80 -p 3306:3306 tutum/lamp
+	docker run -d -p 8888:80 -v ($pwd)/data/app:/app ubuntu-lamp
 
-Test your deployment:
+起動の確認:
+windows/macにて docker-machineを使っている場合
+``
+$docker-machine ip
+$192.168.99.100
+``
+	curl http://192.168.99.100:8888/
 
-	curl http://localhost/
+linux環境の場合
+ curl http://localhost:8888/
 
-Hello world!
 
-
-Loading your custom PHP application
------------------------------------
-
-In order to replace the "Hello World" application that comes bundled with this docker image,
-create a new `Dockerfile` in an empty folder with the following contents:
-
-	FROM tutum/lamp:latest
-	RUN rm -fr /app && git clone https://github.com/username/customapp.git /app
-	EXPOSE 80 3306
-	CMD ["/run.sh"]
-
-replacing `https://github.com/username/customapp.git` with your application's GIT repository.
-After that, build the new `Dockerfile`:
-
-	docker build -t username/my-lamp-app .
-
-And test it:
-
-	docker run -d -p 80:80 -p 3306:3306 username/my-lamp-app
-
-Test your deployment:
-
-	curl http://localhost/
-
-That's it!
 
 
 Connecting to the bundled MySQL server from within the container
