@@ -1,13 +1,14 @@
 ubuntu16.04 lamp環境
 =================
 
-ベースとしたDockefileはこちらにあります。
-
+ベースとしたDockefileはこちらにあります。  
+https://github.com/tutumcloud/lamp
 
 使い方
 -----
 
 イメージの作成:
+カレントに移動して以下を実行
 
 	docker build -t ubuntu-lamp .
 
@@ -19,16 +20,18 @@ LAMP docker image の実行
 
 	docker run -d -p 8888:80 -v ($pwd)/data/app:/app ubuntu-lamp
 
-起動の確認:
-windows/macにて docker-machineを使っている場合
-``
-$docker-machine ip
-$192.168.99.100
-``
+起動の確認:  
+windows/macにて docker-machineを使っている場合  
+
+    $docker-machine ip
+    $192.168.99.100
+上記コマンドでip取得
+
 	curl http://192.168.99.100:8888/
 
 linux環境の場合
- curl http://localhost:8888/
+    
+    curl http://localhost:8888/
 
 
 
