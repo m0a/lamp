@@ -4,7 +4,7 @@ ubuntu16.04 lamp環境
 ベースとしたDockefileはこちらにあります。  
 https://github.com/tutumcloud/lamp
 
-16.04へベースを変更しphp7とmysql5.7をインストールするように設定
+16.04へベースを変更しphp7とmysql5.7をインストールするように設定  
 更にmysqlの設定方法を5.7にあわせて変更
 
 使い方
@@ -90,6 +90,6 @@ Adminユーザを任意のパスワードに変更したい
 
 以下のように指定することで任意のパスワードにadminを設定することも可能です
 
-	docker run -d -p 80:80 -p 3306:3306 -e MYSQL_PASS="mypass" tubuntu-lamp
+	docker run -d -p 80:80 -p 3306:3306 -e MYSQL_PASS="mypass" ubuntu-lamp
 
 
