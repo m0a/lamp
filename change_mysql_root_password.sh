@@ -12,7 +12,7 @@ done
 
 
 _word=$( [ ${MYSQL_PASS} ] && echo "preset" || echo "random" )
-echo "=> chnage MySQL root password change to ''"
+echo "=> MySQL root password change to ''"
 mysql -uroot -e "use mysql; UPDATE user SET authentication_string=password('') WHERE user='root'"
 
 # You can create a /mysql-setup.sh file to intialized the DB

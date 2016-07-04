@@ -4,6 +4,9 @@ ubuntu16.04 lamp環境
 ベースとしたDockefileはこちらにあります。  
 https://github.com/tutumcloud/lamp
 
+16.04へベースを変更しphp7とmysql5.7をインストールするように設定
+更にmysqlの設定方法を5.7にあわせて変更
+
 使い方
 -----
 
@@ -18,7 +21,10 @@ LAMP docker image の実行
 
 コンテナの起動:
 
-	docker run -d -p 8888:80 -v ($pwd)/data/app:/app ubuntu-lamp
+	docker run -d -p 8888:80 6666:3306 -v ($pwd)/data/app:/app ubuntu-lamp
+* httpのポートは``8888``に変更  
+* mysqlのポートは``6666``に変更しています  
+* /appをhost側の``($pwd)data/app``にマウントしています  
 
 起動の確認:  
 windows/macにて docker-machineを使っている場合  
@@ -36,11 +42,10 @@ linux環境の場合
 
 
 
-Connecting to the bundled MySQL server from within the container
+コンテナ内からのmysql接続
 ----------------------------------------------------------------
 
-The bundled MySQL server has a `root` user with no password for local connections.
-Simply connect from your PHP code with this user:
+Container内であればrootのパスワード無しで接続可能です:
 
 	<?php
 	$mysql = new mysqli("localhost", "root");
@@ -48,16 +53,20 @@ Simply connect from your PHP code with this user:
 	?>
 
 
-Connecting to the bundled MySQL server from outside the container
+コンテナ外からのmysql接続
 -----------------------------------------------------------------
 
-The first time that you run your container, a new user `admin` with all privileges
-will be created in MySQL with a random password. To get the password, check the logs
-of the container by running:
+外部からの接続を許可されたadminユーザをランダムパスワードで接続できる用に初期設定されています:
 
-	docker logs $CONTAINER_ID
+    docker ps
+    CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                                        NAMES
+    13a03d2d4d4d        xenial-lamp         "/run.sh"           11 hours ago        Up 11 hours         0.0.0.0:80->80/tcp, 0.0.0.0:3306->3306/tcp   desperate_shaw
 
-You will see an output like the following:
+上記のように``docker ps``にてコンテナ起動中であることを確認し
+
+	docker logs desperate_shaw
+上記のようにログ出力を確認します。
+
 
 	========================================================================
 	You can now connect to this MySQL Server using:
@@ -68,37 +77,19 @@ You will see an output like the following:
 	MySQL user 'root' has no password but only allows local connections
 	========================================================================
 
-In this case, `47nnf4FweaKu` is the password allocated to the `admin` user.
+上記のようにmysqlの接続例がでますのでこれを使って接続します。
 
 You can then connect to MySQL:
 
 	 mysql -uadmin -p47nnf4FweaKu
 
-Remember that the `root` user does not allow connections from outside the container -
-you should use this `admin` user instead!
 
 
-Setting a specific password for the MySQL server admin account
+Adminユーザを任意のパスワードに変更したい
 --------------------------------------------------------------
 
-If you want to use a preset password instead of a random generated one, you can
-set the environment variable `MYSQL_PASS` to your specific password when running the container:
+以下のように指定することで任意のパスワードにadminを設定することも可能です
 
-	docker run -d -p 80:80 -p 3306:3306 -e MYSQL_PASS="mypass" tutum/lamp
-
-You can now test your new admin password:
-
-	mysql -uadmin -p"mypass"
+	docker run -d -p 80:80 -p 3306:3306 -e MYSQL_PASS="mypass" tubuntu-lamp
 
 
-Disabling .htaccess
---------------------
-
-`.htaccess` is enabled by default. To disable `.htaccess`, you can remove the following contents from `Dockerfile`
-
-	# config to enable .htaccess
-    ADD apache_default /etc/apache2/sites-available/000-default.conf
-    RUN a2enmod rewrite
-
-
-**by http://www.tutum.co**

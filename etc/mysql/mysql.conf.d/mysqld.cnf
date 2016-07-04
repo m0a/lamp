@@ -103,3 +103,7 @@ max_binlog_size   = 100M
 # ssl-ca=/etc/mysql/cacert.pem
 # ssl-cert=/etc/mysql/server-cert.pem
 # ssl-key=/etc/mysql/server-key.pem
+character-set-server = utf8
+
+#パスワードの生存期間設定無効化
+default_password_lifetime = 0
