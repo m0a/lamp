@@ -5,7 +5,9 @@ MAINTAINER Makoto Abe
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
   apt-get -y install supervisor git apache2 libapache2-mod-php7.0 mysql-server-5.7 \
-  php7.0-mysql pwgen php-apcu php7.0-mcrypt && \
+  php7.0-mysql pwgen php-apcu php7.0-mcrypt  \
+  php-xdebug \
+  && \
   echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 # editor install
@@ -20,6 +22,7 @@ ADD run.sh /run.sh
 RUN chmod 755 /*.sh
 #ADD my.cnf /etc/mysql/conf.d/my.cnf
 COPY etc/mysql/mysql.conf.d/mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
+COPY etc/php/7.0/mods-available/xdebug.ini /etc/php/7.0/mods-available/xdebug.ini
 
 ADD supervisord-apache2.conf /etc/supervisor/conf.d/supervisord-apache2.conf
 ADD supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-mysqld.conf
