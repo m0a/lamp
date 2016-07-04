@@ -1,5 +1,5 @@
 FROM ubuntu:xenial
-MAINTAINER Fernando Mayo <fernando@tutum.co>, Feng Honglin <hfeng@tutum.co>
+MAINTAINER Makoto Abe
 
 # Install packages
 ENV DEBIAN_FRONTEND noninteractive
@@ -32,6 +32,9 @@ ADD create_mysql_admin_user.sh /create_mysql_admin_user.sh
 ADD change_mysql_root_password.sh /change_mysql_root_password.sh
 RUN chmod 755 /*.sh
 
+# add configuration appahe2
+COPY etc/apache2/envvars /etc/apache2/envvars
+
 # config to enable .htaccess
 ADD apache_default /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
@@ -43,6 +46,11 @@ RUN mkdir -p /app && rm -fr /var/www/html && ln -s /app /var/www/html
 #Environment variables to configure php
 ENV PHP_UPLOAD_MAX_FILESIZE 10M
 ENV PHP_POST_MAX_SIZE 10M
+
+#user group add
+RUN groupadd -g 1000 docker
+RUN useradd  -g 1000 docker
+
 
 # Add volumes for MySQL 
 VOLUME  ["/etc/mysql", "/var/lib/mysql", "/app" ]
